@@ -4,6 +4,8 @@ import argparse
 import logging
 import serial
 import io
+import datetime
+import json
 
 def _init_uart(devnode):
     """
@@ -22,7 +24,10 @@ def _line_to_dict(line):
     if len(elems) < 17:
         raise Exception('Incomplete line, skipping')
 
+    timestamp_ms = int(datetime.datetime.now().timestamp() * 1000)
+
     return {
+        'timestamp' : timestamp_ms,
         'tempC' : float(elems[0]),
         'humidity' : float(elems[1]),
         'pm1_0': int(elems[2]),
@@ -84,7 +89,8 @@ def main():
         try:
             # Try to convert the line into a dict
             result = _line_to_dict(line)
-            logging.info('{}'.format(result))
+            logging.debug('{}'.format(result))
+            print(json.dumps(result))
         except Exception as e:
             # If we connect while the device is operating, we can have very busted records; skip that
             logging.debug('{}'.format(e))
