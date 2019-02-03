@@ -6,6 +6,7 @@ import serial
 import io
 import datetime
 import json
+import sys
 
 def _init_uart(devnode):
     """
@@ -91,6 +92,7 @@ def main():
             result = _line_to_dict(line)
             logging.debug('{}'.format(result))
             print(json.dumps(result))
+            sys.stdout.flush()
         except Exception as e:
             # If we connect while the device is operating, we can have very busted records; skip that
             logging.debug('{}'.format(e))
