@@ -1,0 +1,17 @@
+[Unit]
+Description=donthuff Service
+Requires=donthuff.socket
+After=donthuff.socket
+
+[Service]
+EnvironmentFile=/home/herbivore/etc/donthuff.env
+Sockets=donthuff.socket
+StandardInput=null
+StandardOutput=fd:donthuff.socket
+StandardError=journal
+ExecStart=/home/herbivore/src/donthuff/ve/bin/python %h/src/donthuff/donthuff.py $ARGS
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=default.target
